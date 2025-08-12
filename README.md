@@ -1,5 +1,5 @@
 # Multi-Tier AWS Web App
 
-A multi-tier AWS web application with a private backend and public frontend instances behind an Application Load Balancer, integrating S3 data retrieval, secure networking, and automated provisioning with Terraform.
+A multi-tier AWS web application with a private backend and public frontend behind an Application Load Balancer, integrating S3 for data storage and leveraging Security Groups and a NAT Gateway for secure networking.
 
 ![Diagram](diagram.png)
