@@ -250,3 +250,82 @@ resource "aws_lb_listener" "tf_alb_listener" {
     target_group_arn = aws_lb_target_group.tf_tg.arn
   }
 }
+
+
+resource "aws_network_acl" "tf_nacl" {
+  vpc_id = aws_vpc.tf_vpc.id
+
+  ingress {
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = aws_subnet.tf_public_subnet_1.cidr_block
+    from_port  = 80
+    to_port    = 80
+  }
+
+  ingress {
+    rule_no    = 110
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = aws_subnet.tf_public_subnet_2.cidr_block
+    from_port  = 80
+    to_port    = 80
+  }
+
+  ingress {
+    rule_no    = 120
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = aws_subnet.tf_public_subnet_1.cidr_block
+    from_port  = 22
+    to_port    = 22
+  }
+
+  ingress {
+    rule_no    = 130
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = aws_subnet.tf_public_subnet_2.cidr_block
+    from_port  = 22
+    to_port    = 22
+  }
+
+  # for nat gateway
+  ingress {
+    rule_no    = 140
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 1024
+    to_port    = 65535
+  }
+
+  # for nat gateway
+  ingress {
+    rule_no    = 150
+    protocol   = "udp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 1024
+    to_port    = 65535
+  }
+
+  egress {
+    rule_no    = 100
+    protocol   = "-1"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags = {
+    Name = "tf-nacl"
+  }
+}
+
+resource "aws_network_acl_association" "tf_private_nacl_association" {
+  subnet_id      = aws_subnet.tf_private_subnet.id
+  network_acl_id = aws_network_acl.tf_nacl.id
+}
