@@ -12,8 +12,8 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     res = requests.get(PRIVATE_API, timeout=2)
-    data = res.json().get("data")
-    return f"<h1>{data}! This is Instance {INSTANCE_ID}</h1>"
+    message = res.json().get("message")
+    return f"<h1>{message}! This is Instance {INSTANCE_ID}</h1>"
 
 
 if __name__ == "__main__":

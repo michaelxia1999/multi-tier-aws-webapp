@@ -3,21 +3,17 @@ resource "aws_instance" "tf_private_instance" {
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.tf_private_subnet.id
   associate_public_ip_address = false
-  key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.tf_private_instance_sg.id]
-  iam_instance_profile        = aws_iam_instance_profile.tf_private_instance_profile.name
   user_data                   = <<-EOF
             #!/bin/bash
             yum -y update
             yum -y install python3-pip
-            pip3 install flask boto3
+            pip3 install flask
 
             cat > /home/ec2-user/backend.py << 'END'
             ${file("app/backend.py")}
             END
 
-            export BUCKET="${aws_s3_bucket.tf_bucket.bucket}"
-            export KEY="tf-obj"
             python3 /home/ec2-user/backend.py &
   EOF
 
@@ -25,9 +21,6 @@ resource "aws_instance" "tf_private_instance" {
     Name = "tf-private-instance"
   }
 
-  depends_on = [
-    aws_s3_bucket.tf_bucket,
-  ]
 }
 
 
