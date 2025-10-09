@@ -1,6 +1,6 @@
-from flask import Flask  # type: ignore
+from flask import Flask
 import os
-import requests  # type: ignore
+import requests
 
 PRIVATE_API = os.environ["PRIVATE_API"]
 INSTANCE_ID = os.environ["INSTANCE_ID"]
